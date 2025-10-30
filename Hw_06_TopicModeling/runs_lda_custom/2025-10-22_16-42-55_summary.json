@@ -1,0 +1,18 @@
+{
+  "params": {
+    "k": 30,
+    "alpha": 0.01,
+    "eta": 0.01,
+    "min_cf": 20,
+    "rm_top": 40,
+    "iterations": 2000
+  },
+  "perplexity": 1957.7096613061103,
+  "diversity": 0.8666666666666667,
+  "model_path": "runs_lda_custom/2025-10-22_16-42-55_model_k30_ppl1957.71_div0.87.bin",
+  "pyldavis_html": "runs_lda_custom/2025-10-22_16-42-55_pyldavis_k30.html",
+  "coherence": {
+    "c_umass": -1.6019587146153387,
+    "c_npmi": -0.06209070949806071
+  }
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "rank": 1,
+    "params": {
+      "k": 6,
+      "iterations": 554,
+      "alpha": 0.014427523196364072,
+      "eta": 0.004044386884274556,
+      "min_cf": 48,
+      "rm_top": 0
+    },
+    "perplexity": 924.8186157975398,
+    "diversity": 0.7666666666666667,
+    "model_path": "runs_lda/2025-10-20_20-51-54_model_rank1_k6_ppl924.82_div0.77.bin",
+    "pyldavis_html": "runs_lda/2025-10-20_20-51-54_pyldavis_rank1_k6.html",
+    "coherence": {
+      "c_umass": -0.8724612127673222,
+      "c_npmi": 0.008123265487273122
+    }
+  },
+  {
+    "rank": 2,
+    "params": {
+      "k": 9,
+      "iterations": 570,
+      "alpha": 0.06121072241381696,
+      "eta": 0.0026944523801491187,
+      "min_cf": 50,
+      "rm_top": 1
+    },
+    "perplexity": 954.2203998728323,
+    "diversity": 0.8444444444444444,
+    "model_path": "runs_lda/2025-10-20_20-51-54_model_rank2_k9_ppl954.22_div0.84.bin",
+    "pyldavis_html": "runs_lda/2025-10-20_20-51-54_pyldavis_rank2_k9.html",
+    "coherence": {
+      "c_umass": -0.9917694571166857,
+      "c_npmi": 0.006905798907236724
+    }
+  },
+  {
+    "rank": 3,
+    "params": {
+      "k": 5,
+      "iterations": 566,
+      "alpha": 0.4379645328827703,
+      "eta": 0.0021715072048049786,
+      "min_cf": 47,
+      "rm_top": 3
+    },
+    "perplexity": 979.8478427626627,
+    "diversity": 0.92,
+    "model_path": "runs_lda/2025-10-20_20-51-54_model_rank3_k5_ppl979.85_div0.92.bin",
+    "pyldavis_html": "runs_lda/2025-10-20_20-51-54_pyldavis_rank3_k5.html",
+    "coherence": {
+      "c_umass": -0.8940326040366573,
+      "c_npmi": 0.03722178631705314
+    }
+  }
+]

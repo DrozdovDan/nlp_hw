@@ -72,13 +72,12 @@ def topic_terms(model: tp.LDAModel, topn: int) -> List[List[str]]:
 def objective(trial: optuna.Trial, docs_tok: List[List[str]], seed: int) -> float:
     """ Цель, к которой мы стремимся, подгоняя гиперпараметры """
 
-    # TODO: ЗАДАНИЕ (эти интервалы явно не особо адекватны задаче, можно сузить)
-    k = trial.suggest_int("k", 10, 105)
-    iters = trial.suggest_int("iterations", 100, 50000)
-    alpha = trial.suggest_float("alpha", 0.0001, 1.0, log=True)
-    eta = trial.suggest_float("eta", 0.0001, 1.0, log=True)
-    min_cf = trial.suggest_int("min_cf", 1, 10)
-    rm_top = trial.suggest_int("rm_top", 0, 200)
+    k = trial.suggest_int("k", 5, 10)
+    iters = trial.suggest_int("iterations", 500, 750)
+    alpha = trial.suggest_float("alpha", 0.01, 0.75, log=True)
+    eta = trial.suggest_float("eta", 0.001, 0.005, log=True)
+    min_cf = trial.suggest_int("min_cf", 40, 50)
+    rm_top = trial.suggest_int("rm_top", 0, 10)
 
     model = tp.LDAModel(k=k, alpha=alpha, eta=eta, seed=seed,
                         min_cf=min_cf, rm_top=rm_top)
@@ -91,11 +90,9 @@ def objective(trial: optuna.Trial, docs_tok: List[List[str]], seed: int) -> floa
         return float("inf")
 
     model.train(iters, workers=1)
+    ppl = perplexity(model)
     div = diversity(model)
-
-    # TODO: обратите внимание, перебираем по двум целевым значениям,
-    #  но когда будете искать СВОЮ наилучшую модель, можете делать как вам угодно
-    return perplexity(model), div
+    return ppl, div
 
 
 def main():
@@ -104,7 +101,7 @@ def main():
     ap.add_argument("--ii", default="wiki.ii.boolean.json")
     ap.add_argument("--wc", default="wiki.win-5.json")
     ap.add_argument("--out", default="runs_lda")
-    ap.add_argument("--trials", type=int, default=10) # TODO: ЗАДАНИЕ -- маловато!
+    ap.add_argument("--trials", type=int, default=50)
     ap.add_argument("--seed", type=int, default=423)
     ap.add_argument("--topn", type=int, default=10)
     args = ap.parse_args()
@@ -118,7 +115,11 @@ def main():
     # поиск по перплексии
     study = optuna.create_study(directions=["minimize", "maximize"],
                                 study_name="lda_tomotopy",
-                                sampler=TPESampler()) # TODO: может, что-то другое подойдёт лучше?
+                                sampler=TPESampler(n_startup_trials= max(20, args.trials // 5),
+                                                   multivariate=True, group=True,
+                                                   n_ei_candidates=64,
+                                                   constant_liar=True,
+                                                   seed=args.seed))
 
     logging.info(f"Created study {study}")
     study.optimize(lambda tr: objective(tr, docs_tok, args.seed),
@@ -126,7 +127,7 @@ def main():
                    n_jobs=-1)
 
     logging.info("Done optimizing the hyperparams. Loading counts from Wiki... (may take a few minutes)")
-    best_trials = study.best_trials[:3]
+    best_trials = sorted(study.best_trials, key=lambda t: (t.values[0], -t.values[1]))[:3]
 
     # грузим подготовленные структуры, занимает время
     inv = TinyInvertedIndex.load_json(args.ii)
@@ -136,7 +137,6 @@ def main():
     results = []
 
     for rank, tr in enumerate(best_trials, start=1):
-        # todo: maybe should store top 3 models when optimizing?
         p = tr.params
 
         # корпус под выбранные фильтры
@@ -196,7 +196,6 @@ def main():
         json.dump(results, f, ensure_ascii=False, indent=2)
 
     for r in results:
-        # todo: probably should add iterations, etc.
         str_res = f"[rank {r['rank']}] ppl={r['perplexity']:.2f} div={r['diversity']:.2f}  k={r['params']['k']}" + \
                   f"  c_umass={r['coherence']['c_umass']:.4f}  c_npmi={r['coherence']['c_npmi']:.4f}"
         logging.info(str_res)

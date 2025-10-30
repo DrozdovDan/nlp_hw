@@ -79,8 +79,7 @@ class TinyInvertedIndex:
 
     def df_tid(self, tid: int) -> int:
         """В скольких документах встречается терм"""
-        # TODO: ЗАДАНИЕ: длина соответствующего постинга + особые случаи
-        raise NotImplementedError
+        return len(self._postings[tid])
 
     def df(self, term: str) -> int:
         """В скольких документах встречается терм"""
@@ -109,8 +108,7 @@ class TinyInvertedIndex:
         if len(p1) > len(p2):
             p1, p2 = p2, p1
 
-        # TODO: ЗАДАНИЕ: "слияние списков" -- подсчёт количества общих документов
-        raise NotImplementedError
+        return len(set(p1) & set(p2))
 
     def and_docs(self, *terms: str) -> List[int]:
         """Все документы, где встречаются термы"""

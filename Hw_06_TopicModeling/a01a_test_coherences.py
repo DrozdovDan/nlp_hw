@@ -125,3 +125,8 @@ def test_npmi_edge_defined():
     val = npmi("a", "c", wc)
     assert isinstance(val, float)
     assert val <= 0.0
+
+if __name__ == "__main__":
+    test_umass_values()
+    test_npmi_counts_and_values()
+    test_npmi_edge_defined()

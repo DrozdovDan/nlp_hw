@@ -168,8 +168,18 @@ class WindowCounter:
         """
         if self.pair_counts is None:
             raise ValueError("Matrix not built yet. Run build_window_coocc_csr first.")
-        # TODO: ЗАДАНИЕ
-        raise NotImplementedError
+        
+        if isinstance(w1, str):
+            w1_id = self.word2idx[w1]
+        else:
+            w1_id = w1
+
+        if isinstance(w2, str):
+            w2_id = self.word2idx[w2]
+        else:
+            w2_id = w2
+
+        return self.pair_counts[(w1_id, w2_id)]
 
     def save_json(self, path: str) -> None:
         """

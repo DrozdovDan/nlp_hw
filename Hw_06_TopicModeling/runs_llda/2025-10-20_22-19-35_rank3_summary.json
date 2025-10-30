@@ -1,0 +1,18 @@
+{
+  "rank": 3,
+  "params": {
+    "iterations": 592,
+    "alpha": 0.010164839640074148,
+    "eta": 0.0039053019221219937,
+    "min_cf": 50,
+    "rm_top": 7
+  },
+  "perplexity": 976.9963616761448,
+  "diversity": 0.6303030303030303,
+  "model_path": "runs_llda/2025-10-20_22-19-35_model_rank3_ppl977.00_div0.63.bin",
+  "pyldavis_html": "runs_llda/2025-10-20_22-19-35_pyldavis_rank3.html",
+  "coherence": {
+    "c_umass": -1.040341367863425,
+    "c_npmi": -0.008047923145721066
+  }
+}

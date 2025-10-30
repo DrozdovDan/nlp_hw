@@ -3,6 +3,7 @@ from typing import List, Callable
 
 from simple_inverted_index import TinyInvertedIndex
 from simple_window_counter import WindowCounter
+from math import log2
 
 Epsilon = 1e-15
 
@@ -13,8 +14,8 @@ def umass(w1: str, w2: str, index: TinyInvertedIndex) -> float:
     if w1_df == 0 or w2_df == 0:
         logging.error(f"Quite suspicious counts: {w1}:{w1_df} and {w2}:{w2_df}; returning -inf.")
         return float("-inf")
-    # TODO: задание
-    raise NotImplementedError
+    
+    return log2((index.and_count(w1, w2) + 1) / min(w1_df, w2_df))
 
 
 def npmi(w1: str, w2: str, wc: WindowCounter) -> float:
@@ -25,12 +26,12 @@ def npmi(w1: str, w2: str, wc: WindowCounter) -> float:
 
     w1_count = wc.unigram_presence[wc.word2idx[w1]]
     w2_count = wc.unigram_presence[wc.word2idx[w2]]
+    w12_count = wc.get_pair_count(w1, w2)
 
-    if w1_count == 0 or w2_count == 0 or wc.total_windows == 0:
+    if w1_count == 0 or w2_count == 0 or wc.total_windows == 0 or w12_count == 0:
         return -1.0
 
-    # TODO: ЗАДАНИЕ
-    raise NotImplementedError
+    return - log2(w12_count / (w1_count * w2_count) * wc.total_windows) / log2(w12_count / wc.total_windows)
 
 
 def topic_coherence_averaging(top_terms: List[str], scorer: Callable[[str, str], float]) -> float:
